@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Peridot;
+using Peridot.UI;
 
 
 namespace peridot_ui_test;
@@ -25,7 +26,7 @@ public class Game1 : Core
     protected override void LoadContent()
     {
         _font = Content.Load<SpriteFont>("fonts/JosefinSans");
-        _currentExample = new ImageExample();
+        _currentExample = new ModalExample();
         _currentExample.Initialize(_font);
         Core.UISystem.AddElement(_currentExample.GetRootElement());
     }
