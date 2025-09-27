@@ -25,7 +25,7 @@ public class Game1 : Core
     protected override void LoadContent()
     {
         _font = Content.Load<SpriteFont>("fonts/JosefinSans");
-        _currentExample = new VisibilityExample();
+        _currentExample = new ImageExample();
         _currentExample.Initialize(_font);
         Core.UISystem.AddElement(_currentExample.GetRootElement());
     }
