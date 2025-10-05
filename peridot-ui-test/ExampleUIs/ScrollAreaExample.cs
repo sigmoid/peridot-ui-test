@@ -131,6 +131,100 @@ public class ScrollAreaExample : IExample
                 Color.LightGray
             );
 
+            // === ADDITIONAL UI ELEMENTS OUTSIDE SCROLLAREA FOR TESTING ===
+            
+            // TextInput example
+            var textInputLabel = new Label(
+                new Rectangle(0, 0, 800, 25),
+                "TextInput (outside ScrollArea):",
+                font,
+                Color.Cyan
+            );
+            
+            var textInput = new TextInput(
+                new Rectangle(0, 0, 300, 35),
+                font,
+                "Type here...",
+                Color.White,
+                Color.Black,
+                Color.Gray,
+                Color.Blue,
+                8, 2
+            );
+            textInput.OnTextChanged += (text) => UpdateStatus($"TextInput: {text}");
+
+            // TextArea example (read-only)
+            var textAreaLabel = new Label(
+                new Rectangle(0, 0, 800, 25),
+                "TextArea (read-only, outside ScrollArea):",
+                font,
+                Color.Orange
+            );
+            
+            var textArea = new TextArea(
+                new Rectangle(0, 0, 380, 80),
+                font,
+                "This is a multi-line TextArea outside the ScrollArea.\nIt demonstrates that other UI elements work properly alongside the ScrollArea.\nThis one is read-only for display purposes.",
+                wordWrap: true,
+                readOnly: true
+            );
+
+            // Slider example
+            var sliderLabel = new Label(
+                new Rectangle(0, 0, 400, 25),
+                "Slider (outside ScrollArea):",
+                font,
+                Color.Lime
+            );
+            
+            var slider = new Slider(
+                new Rectangle(0, 0, 200, 30),
+                minValue: 0f,
+                maxValue: 100f,
+                initialValue: 50f,
+                trackColor: Color.DarkGray,
+                fillColor: Color.Green,
+                handleColor: Color.White
+            );
+            slider.OnValueChanged += (value) => UpdateStatus($"Slider value: {value:F1}");
+
+            // Toast and Modal buttons
+            var controlButtonsLayout = new HorizontalLayoutGroup(new Rectangle(0, 0, 780, 40), 10);
+            
+            var showToastButton = new Button(
+                new Rectangle(0, 0, 120, 35),
+                "Show Toast",
+                font,
+                Color.DarkOrange,
+                Color.Orange,
+                Color.White,
+                () => ShowToast(font)
+            );
+            
+            var showModalButton = new Button(
+                new Rectangle(0, 0, 120, 35),
+                "Show Modal",
+                font,
+                Color.DarkRed,
+                Color.Red,
+                Color.White,
+                () => ShowModal(font)
+            );
+
+            var clearStatusButton = new Button(
+                new Rectangle(0, 0, 120, 35),
+                "Clear Status",
+                font,
+                Color.DarkBlue,
+                Color.Blue,
+                Color.White,
+                () => UpdateStatus("Status cleared")
+            );
+
+            controlButtonsLayout.AddChild(showToastButton);
+            controlButtonsLayout.AddChild(showModalButton);
+            controlButtonsLayout.AddChild(clearStatusButton);
+
             // Add all elements to main layout
             mainLayout.AddChild(titleLabel);
             mainLayout.AddChild(_statusLabel);
@@ -140,6 +234,15 @@ public class ScrollAreaExample : IExample
             mainLayout.AddChild(instructionLabel2);
             mainLayout.AddChild(instructionLabel3);
             mainLayout.AddChild(instructionLabel4);
+            
+            // Add the additional UI elements
+            mainLayout.AddChild(textInputLabel);
+            mainLayout.AddChild(textInput);
+            mainLayout.AddChild(textAreaLabel);
+            mainLayout.AddChild(textArea);
+            mainLayout.AddChild(sliderLabel);
+            mainLayout.AddChild(slider);
+            mainLayout.AddChild(controlButtonsLayout);
 
             _rootElement = mainLayout;
         }
@@ -153,120 +256,227 @@ public class ScrollAreaExample : IExample
 
     private void PopulateScrollAreaWithExtendingContent(SpriteFont font)
     {
-        // Create a LARGE grid that extends way beyond the scroll area viewport
-        // This will test real clipping - elements outside viewport should not be visible
-        int gridCols = 12;  // Much wider than viewport
-        int gridRows = 15;  // Much taller than viewport
-        int itemWidth = 100;
-        int itemHeight = 80;
-        int spacing = 10;
+        // Create a comprehensive test with ALL types of UI elements
+        int currentY = 10;
+        int spacing = 15;
 
-        for (int row = 0; row < gridRows; row++)
+        // Section 1: Labels with different styles
+        var sectionLabel1 = new Label(
+            new Rectangle(10, currentY, 600, 30),
+            "=== SECTION 1: LABELS ===", 
+            font, Color.Yellow, Color.DarkBlue
+        );
+        _scrollArea.AddChild(sectionLabel1);
+        currentY += 40;
+
+        for (int i = 0; i < 8; i++)
         {
-            for (int col = 0; col < gridCols; col++)
-            {
-                int x = col * (itemWidth + spacing) + spacing;
-                int y = row * (itemHeight + spacing) + spacing;
-
-                // Alternate between different content types for visual variety
-                int contentType = (row * gridCols + col) % 4;
-                
-                switch (contentType)
-                {
-                    case 0:
-                        // Colored rectangle with position info
-                        var colorLabel = new Label(
-                            new Rectangle(x, y, itemWidth, itemHeight),
-                            $"R{row}C{col}\nPos: {x},{y}\nShould clip!",
-                            font,
-                            Color.White,
-                            GetPositionColor(row, col)
-                        );
-                        _scrollArea.AddChild(colorLabel);
-                        break;
-
-                    case 1:
-                        // Image that should be clipped when outside viewport
-                        var image = new UIImage(
-                            texture1, 
-                            new Rectangle(x, y, itemWidth, itemHeight - 20)
-                        );
-                        _scrollArea.AddChild(image);
-                        
-                        // Small label below image
-                        var imageLabel = new Label(
-                            new Rectangle(x, y + itemHeight - 20, itemWidth, 20),
-                            $"IMG {row},{col}",
-                            font,
-                            Color.Black,
-                            Color.White
-                        );
-                        _scrollArea.AddChild(imageLabel);
-                        break;
-
-                    case 2:
-                        // Interactive button (should only respond when visible)
-                        var button = new ImageButton(
-                            new Rectangle(x, y, itemWidth, itemHeight - 20),
-                            texture2,
-                            () => UpdateStatus($"Clicked button at R{row}C{col} - pos {x},{y}"),
-                            tintColor: Color.White,
-                            hoverTintColor: Color.Yellow,
-                            drawBackground: true,
-                            backgroundColor: Color.DarkRed,
-                            hoverBackgroundColor: Color.Red
-                        );
-                        _scrollArea.AddChild(button);
-                        
-                        var buttonLabel = new Label(
-                            new Rectangle(x, y + itemHeight - 20, itemWidth, 20),
-                            $"BTN {row},{col}",
-                            font,
-                            Color.White,
-                            Color.DarkRed
-                        );
-                        _scrollArea.AddChild(buttonLabel);
-                        break;
-
-                    case 3:
-                        // Another image type
-                        var image2 = new UIImage(
-                            (row + col) % 2 == 0 ? texture3 : texture4, 
-                            new Rectangle(x, y, itemWidth, itemHeight - 20)
-                        );
-                        _scrollArea.AddChild(image2);
-                        
-                        var image2Label = new Label(
-                            new Rectangle(x, y + itemHeight - 20, itemWidth, 20),
-                            $"TEX {row},{col}",
-                            font,
-                            Color.Black,
-                            Color.LightBlue
-                        );
-                        _scrollArea.AddChild(image2Label);
-                        break;
-                }
-            }
+            var label = new Label(
+                new Rectangle(10 + (i % 4) * 180, currentY + (i / 4) * 40, 170, 35),
+                $"Label {i + 1}\nMultiline text\nClip test!",
+                font,
+                Color.White,
+                GetPositionColor(i, 0)
+            );
+            _scrollArea.AddChild(label);
         }
+        currentY += 100;
 
-        // Add some content that extends to extreme positions to really test clipping
-        var extremeLabel1 = new Label(
-            new Rectangle(2000, 50, 200, 50),
-            "WAY RIGHT - Should be clipped until you scroll!",
-            font,
-            Color.Red,
-            Color.Yellow
+        // Section 2: Regular Buttons
+        var sectionLabel2 = new Label(
+            new Rectangle(10, currentY, 600, 30),
+            "=== SECTION 2: REGULAR BUTTONS ===", 
+            font, Color.Cyan, Color.DarkBlue
         );
-        _scrollArea.AddChild(extremeLabel1);
+        _scrollArea.AddChild(sectionLabel2);
+        currentY += 40;
 
-        var extremeLabel2 = new Label(
-            new Rectangle(50, 2000, 200, 50),
-            "WAY DOWN - Should be clipped until you scroll!",
-            font,
-            Color.Blue,
-            Color.Cyan
+        for (int i = 0; i < 6; i++)
+        {
+            var button = new Button(
+                new Rectangle(10 + (i % 3) * 200, currentY + (i / 3) * 50, 190, 45),
+                $"Button {i + 1}",
+                font,
+                Color.DarkGreen,
+                Color.Green,
+                Color.White,
+                () => UpdateStatus($"Regular Button {i + 1} clicked!")
+            );
+            _scrollArea.AddChild(button);
+        }
+        currentY += 120;
+
+        // Section 3: Image Buttons
+        var sectionLabel3 = new Label(
+            new Rectangle(10, currentY, 600, 30),
+            "=== SECTION 3: IMAGE BUTTONS ===", 
+            font, Color.Orange, Color.DarkBlue
         );
-        _scrollArea.AddChild(extremeLabel2);
+        _scrollArea.AddChild(sectionLabel3);
+        currentY += 40;
+
+        for (int i = 0; i < 8; i++)
+        {
+            var texture = (i % 4) switch
+            {
+                0 => texture1,
+                1 => texture2,
+                2 => texture3,
+                _ => texture4
+            };
+
+            var imageButton = new ImageButton(
+                new Rectangle(10 + (i % 4) * 150, currentY + (i / 4) * 80, 140, 70),
+                texture,
+                () => UpdateStatus($"Image Button {i + 1} clicked!"),
+                tintColor: Color.White,
+                hoverTintColor: Color.Yellow,
+                drawBackground: true,
+                backgroundColor: GetPositionColor(i, 1),
+                hoverBackgroundColor: Color.LightGray
+            );
+            _scrollArea.AddChild(imageButton);
+        }
+        currentY += 180;
+
+        // Section 4: UIImages
+        var sectionLabel4 = new Label(
+            new Rectangle(10, currentY, 600, 30),
+            "=== SECTION 4: UI IMAGES ===", 
+            font, Color.Lime, Color.DarkBlue
+        );
+        _scrollArea.AddChild(sectionLabel4);
+        currentY += 40;
+
+        for (int i = 0; i < 12; i++)
+        {
+            var texture = (i % 4) switch
+            {
+                0 => texture1,
+                1 => texture2,
+                2 => texture3,
+                _ => texture4
+            };
+
+            var image = new UIImage(
+                texture,
+                new Rectangle(10 + (i % 6) * 120, currentY + (i / 6) * 90, 110, 80)
+            );
+            _scrollArea.AddChild(image);
+        }
+        currentY += 200;
+
+        // Section 5: Mixed Layout Groups (if they exist in scroll area)
+        var sectionLabel5 = new Label(
+            new Rectangle(10, currentY, 600, 30),
+            "=== SECTION 5: LAYOUT GROUPS ===", 
+            font, Color.Pink, Color.DarkBlue
+        );
+        _scrollArea.AddChild(sectionLabel5);
+        currentY += 40;
+
+        // Create a horizontal layout group inside the scroll area
+        var horizontalGroup = new HorizontalLayoutGroup(new Rectangle(10, currentY, 700, 60), 10);
+        for (int i = 0; i < 5; i++)
+        {
+            var groupButton = new Button(
+                new Rectangle(0, 0, 120, 50),
+                $"Group {i + 1}",
+                font,
+                Color.DarkBlue,
+                Color.Blue,
+                Color.White,
+                () => UpdateStatus($"Layout Group Button {i + 1} clicked!")
+            );
+            horizontalGroup.AddChild(groupButton);
+        }
+        _scrollArea.AddChild(horizontalGroup);
+        currentY += 80;
+
+        // Create a vertical layout group
+        var verticalGroup = new VerticalLayoutGroup(new Rectangle(10, currentY, 300, 200), 5);
+        for (int i = 0; i < 4; i++)
+        {
+            var groupLabel = new Label(
+                new Rectangle(0, 0, 280, 45),
+                $"Vertical Group Item {i + 1}",
+                font,
+                Color.Black,
+                GetPositionColor(i, 2)
+            );
+            verticalGroup.AddChild(groupLabel);
+        }
+        _scrollArea.AddChild(verticalGroup);
+        currentY += 220;
+
+        // Section 6: Grid Layout
+        var sectionLabel6 = new Label(
+            new Rectangle(10, currentY, 600, 30),
+            "=== SECTION 6: GRID LAYOUT ===", 
+            font, Color.Violet, Color.DarkBlue
+        );
+        _scrollArea.AddChild(sectionLabel6);
+        currentY += 40;
+
+        var gridGroup = new GridLayoutGroup(new Rectangle(10, currentY, 600, 300), 4, 3, 10);
+        for (int i = 0; i < 12; i++)
+        {
+            var gridItem = new Label(
+                new Rectangle(0, 0, 140, 90),
+                $"Grid {i + 1}\nRow {i / 4}\nCol {i % 4}",
+                font,
+                Color.White,
+                GetPositionColor(i, 3)
+            );
+            gridGroup.AddChild(gridItem);
+        }
+        _scrollArea.AddChild(gridGroup);
+        currentY += 320;
+
+        // Section 7: Extreme positions for clipping test
+        var sectionLabel7 = new Label(
+            new Rectangle(10, currentY, 600, 30),
+            "=== SECTION 7: EXTREME POSITIONS ===", 
+            font, Color.Red, Color.Yellow
+        );
+        _scrollArea.AddChild(sectionLabel7);
+        currentY += 40;
+
+        // Elements that extend way beyond normal bounds
+        var extremeRight = new Label(
+            new Rectangle(1500, currentY, 300, 50),
+            "EXTREME RIGHT - Should clip until horizontal scroll!",
+            font, Color.White, Color.Red
+        );
+        _scrollArea.AddChild(extremeRight);
+
+        var extremeDown = new Label(
+            new Rectangle(10, currentY + 500, 400, 50),
+            "EXTREME DOWN - Test vertical clipping!",
+            font, Color.White, Color.Blue
+        );
+        _scrollArea.AddChild(extremeDown);
+
+        // Far corner test
+        var extremeCorner = new ImageButton(
+            new Rectangle(1200, currentY + 400, 200, 100),
+            texture1,
+            () => UpdateStatus("Extreme corner button clicked! Scrolling works!"),
+            tintColor: Color.White,
+            hoverTintColor: Color.Yellow,
+            drawBackground: true,
+            backgroundColor: Color.Purple,
+            hoverBackgroundColor: Color.Magenta
+        );
+        _scrollArea.AddChild(extremeCorner);
+
+        // Test negative positions (should be clipped)
+        var negativePos = new Label(
+            new Rectangle(-100, currentY, 200, 50),
+            "NEGATIVE X - Should be clipped!",
+            font, Color.White, Color.Orange
+        );
+        _scrollArea.AddChild(negativePos);
     }
 
     private Color GetPositionColor(int row, int col)
@@ -290,6 +500,72 @@ public class ScrollAreaExample : IExample
     private void OnScrollChanged(Vector2 scrollOffset)
     {
         UpdateStatus($"Scroll: X={scrollOffset.X:F0}, Y={scrollOffset.Y:F0} - Content clipped by scissor test!");
+    }
+
+    private void ShowToast(SpriteFont font)
+    {
+        try
+        {
+            var toast = Toast.Show(
+                "This is a toast notification! 🎉", 
+                font, 
+                new Rectangle(0, 0, 1200, 900),
+                Toast.ToastType.Info,
+                3.0f
+            );
+            Core.UISystem.AddElement(toast);
+            UpdateStatus("Toast notification shown!");
+        }
+        catch (System.Exception ex)
+        {
+            UpdateStatus($"Error showing toast: {ex.Message}");
+        }
+    }
+
+    private void ShowModal(SpriteFont font)
+    {
+        try
+        {
+            var modal = new Modal(
+                new Rectangle(0, 0, 1200, 900),
+                new Rectangle(300, 200, 600, 400),
+                "Example Modal Dialog",
+                font,
+                font,
+                Color.Black * 0.5f, // Semi-transparent overlay
+                Color.White,
+                Color.DarkBlue,
+                () => UpdateStatus("Modal closed")
+            );
+
+            // Add some content to the modal
+            var modalLabel = new Label(
+                new Rectangle(20, 20, 560, 100),
+                "This is a modal dialog example!\n\nIt demonstrates that modals work alongside ScrollAreas.\n\nClick the X or outside to close.",
+                font,
+                Color.Black,
+                Color.White
+            );
+            modal.AddContentElement(modalLabel);
+
+            var modalButton = new Button(
+                new Rectangle(20, 140, 150, 40),
+                "Modal Button",
+                font,
+                Color.DarkGreen,
+                Color.Green,
+                Color.White,
+                () => UpdateStatus("Modal button clicked!")
+            );
+            modal.AddContentElement(modalButton);
+
+            Core.UISystem.AddElement(modal);
+            UpdateStatus("Modal dialog shown!");
+        }
+        catch (System.Exception ex)
+        {
+            UpdateStatus($"Error showing modal: {ex.Message}");
+        }
     }
 
     public UIElement GetRootElement()
