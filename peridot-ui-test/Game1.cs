@@ -26,7 +26,7 @@ public class Game1 : Core
     protected override void LoadContent()
     {
         _font = Content.Load<SpriteFont>("fonts/Default");
-        _currentExample = new ScrollAreaExample();
+        _currentExample = new FontTestExample(); // Changed to FontTestExample for diagnostics
         _currentExample.Initialize(_font);
         Core.UISystem.AddElement(_currentExample.GetRootElement());
     }
