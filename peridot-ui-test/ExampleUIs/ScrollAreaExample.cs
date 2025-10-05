@@ -164,10 +164,10 @@ public class ScrollAreaExample : IExample
             var textArea = new TextArea(
                 new Rectangle(0, 0, 380, 80),
                 font,
-                "This is a multi-line TextArea outside the ScrollArea.\nIt demonstrates that other UI elements work properly alongside the ScrollArea.\nThis one is read-only for display purposes.",
                 wordWrap: true,
                 readOnly: true
             );
+            textArea.Text = "This is a multi-line TextArea outside the ScrollArea.\nIt demonstrates that other UI elements work properly alongside the ScrollArea.\nThis one is read-only for display purposes.";
 
             // Slider example
             var sliderLabel = new Label(

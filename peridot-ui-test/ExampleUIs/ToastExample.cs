@@ -311,7 +311,6 @@ public class ToastExample : IExample
         var instructionsTextArea = new TextArea(
             new Rectangle(500, 200, 400, 200),
             font,
-            "",
             wordWrap: true,
             readOnly: true,
             backgroundColor: Color.LightGray,

@@ -11,7 +11,6 @@ public class TextAreaExample : IExample
         var textArea = new TextArea(
             bounds: new Rectangle(50, 50, 400, 200),
             font: font,
-            placeholder: "Enter your text here...\nSupports multiple lines!",
             wordWrap: true,
             readOnly: true
         );

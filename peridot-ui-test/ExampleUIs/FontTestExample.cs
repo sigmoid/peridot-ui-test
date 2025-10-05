@@ -35,7 +35,6 @@ public class FontTestExample : IExample
         _diagnosticsDisplay = new TextArea(
             new Rectangle(0, 0, 1080, 300),
             font,
-            "",
             wordWrap: true,
             readOnly: true,
             backgroundColor: Color.Black,
@@ -86,10 +85,10 @@ public class FontTestExample : IExample
             () => TestUnicode(font)
         );
 
-        buttonLayout.AddChild(refreshButton);
-        buttonLayout.AddChild(testKerningButton);
-        buttonLayout.AddChild(testSpacingButton);
-        buttonLayout.AddChild(testUnicodeButton);
+        // buttonLayout.AddChild(refreshButton);
+        // buttonLayout.AddChild(testKerningButton);
+        // buttonLayout.AddChild(testSpacingButton);
+        // buttonLayout.AddChild(testUnicodeButton);
 
         // Create visual test areas
         var visualTestLabel = new Label(
@@ -103,23 +102,23 @@ public class FontTestExample : IExample
         var kerningTestArea = new TextArea(
             new Rectangle(0, 0, 540, 150),
             font,
-            GetKerningTestText(),
             wordWrap: true,
             readOnly: true,
             backgroundColor: Color.White,
             textColor: Color.Black
         );
+        kerningTestArea.Text = GetKerningTestText();
 
         // Spacing test display  
         var spacingTestArea = new TextArea(
             new Rectangle(0, 0, 540, 150),
             font,
-            GetSpacingTestText(),
             wordWrap: true,
             readOnly: true,
             backgroundColor: Color.LightGray,
             textColor: Color.Black
         );
+        spacingTestArea.Text = GetSpacingTestText();
 
         var testLayout = new HorizontalLayoutGroup(new Rectangle(0, 0, 1080, 150), 10);
         testLayout.AddChild(kerningTestArea);
@@ -129,17 +128,17 @@ public class FontTestExample : IExample
         var instructionsArea = new TextArea(
             new Rectangle(0, 0, 1080, 120),
             font,
-            GetInstructionsText(),
             wordWrap: true,
             readOnly: true,
             backgroundColor: Color.DarkBlue,
             textColor: Color.White
         );
+        instructionsArea.Text = GetInstructionsText();
 
         // Add all elements to main layout
-        mainLayout.AddChild(titleLabel);
-        mainLayout.AddChild(_diagnosticsDisplay);
-        mainLayout.AddChild(buttonLayout);
+        // mainLayout.AddChild(titleLabel);
+        // mainLayout.AddChild(_diagnosticsDisplay);
+        // mainLayout.AddChild(buttonLayout);
         mainLayout.AddChild(visualTestLabel);
         mainLayout.AddChild(testLayout);
         mainLayout.AddChild(instructionsArea);
