@@ -4,7 +4,7 @@ using Peridot.UI;
 
 public class TextAreaExample : IExample
 {
-    private IUIElement _rootElement;
+    private UIElement _rootElement;
 
     public void Initialize(SpriteFont font)
     {
@@ -21,7 +21,7 @@ public class TextAreaExample : IExample
         _rootElement = textArea;
     }
 
-    public IUIElement GetRootElement()
+    public UIElement GetRootElement()
     {
         return _rootElement;
     }

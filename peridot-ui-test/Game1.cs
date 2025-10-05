@@ -11,7 +11,7 @@ public class Game1 : Core
     IExample _currentExample;
     SpriteFont _font;
     public Game1() :
-        base("Peridot UI Test", 1200, 900, false)
+        base("Peridot UI Test", 1200, 900, false, "fonts/Default")
     {
         IsMouseVisible = true;
     }
@@ -25,8 +25,8 @@ public class Game1 : Core
 
     protected override void LoadContent()
     {
-        _font = Content.Load<SpriteFont>("fonts/JosefinSans");
-        _currentExample = new ToastExample();
+        _font = Content.Load<SpriteFont>("fonts/Default");
+        _currentExample = new ScrollAreaExample();
         _currentExample.Initialize(_font);
         Core.UISystem.AddElement(_currentExample.GetRootElement());
     }

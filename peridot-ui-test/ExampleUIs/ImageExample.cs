@@ -6,7 +6,7 @@ using Peridot.UI;
 
 public class ImageExample : IExample
 {
-    private IUIElement _rootElement;
+    private UIElement _rootElement;
 
     private Texture2D texture1;
     private Texture2D texture2;
@@ -37,7 +37,7 @@ public class ImageExample : IExample
         _rootElement = layout;
     }
 
-    public IUIElement GetRootElement()
+    public UIElement GetRootElement()
     {
         return _rootElement;
     }

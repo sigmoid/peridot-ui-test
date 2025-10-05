@@ -6,7 +6,7 @@ using System;
 
 public class ToastExample : IExample
 {
-    private IUIElement _rootElement;
+    private UIElement _rootElement;
     private ToastManager _toastManager;
     private Rectangle _screenBounds;
 
@@ -362,7 +362,7 @@ Try clicking the buttons to see the toast system in action!";
         };
     }
 
-    public IUIElement GetRootElement()
+    public UIElement GetRootElement()
     {
         return _rootElement;
     }

@@ -6,7 +6,7 @@ public class ModalExample : IExample
 {
     Modal _modal;
     Button _showModalButton;
-    IUIElement _rootElement;
+    UIElement _rootElement;
     public void Initialize(SpriteFont font)
     {
         var layout = new Canvas(new Rectangle(50, 50, 300, 400));
@@ -32,7 +32,7 @@ public class ModalExample : IExample
 
         _rootElement = layout;
     }
-    public IUIElement GetRootElement()
+    public UIElement GetRootElement()
     {
         return _rootElement;
     }

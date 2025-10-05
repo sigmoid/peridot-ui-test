@@ -5,7 +5,7 @@ using Peridot.UI;
 
 public class VisibilityExample : IExample
 {
-    private IUIElement _rootElement;
+    private UIElement _rootElement;
 
     private Label _label;
     private Slider _slider;
@@ -38,7 +38,7 @@ public class VisibilityExample : IExample
         _rootElement = layout;
     }
 
-    public IUIElement GetRootElement()
+    public UIElement GetRootElement()
     {
         return _rootElement;
     }
