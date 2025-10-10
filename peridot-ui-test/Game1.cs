@@ -1,7 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Peridot;
 using Peridot.UI;
+using Peridot.UI.Builder;
 
 
 namespace peridot_ui_test;
@@ -25,10 +27,27 @@ public class Game1 : Core
 
     protected override void LoadContent()
     {
-        _font = Content.Load<SpriteFont>("fonts/Default");
-        _currentExample = new FontTestExample(); // Changed to FontTestExample for diagnostics
-        _currentExample.Initialize(_font);
-        Core.UISystem.AddElement(_currentExample.GetRootElement());
+        Console.WriteLine("Game1: LoadContent started");
+        try
+        {
+            _font = Content.Load<SpriteFont>("fonts/Default");
+            Console.WriteLine("Game1: Font loaded successfully");
+            
+            _currentExample = new UIBuilderExample();
+            Console.WriteLine("Game1: UIBuilderExample created");
+            
+            _currentExample.Initialize(_font);
+            Console.WriteLine("Game1: Example initialized");
+            
+            Core.UISystem.AddElement(_currentExample.GetRootElement());
+            Console.WriteLine("Game1: UI element added");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Game1: Error in LoadContent: {ex.Message}");
+            Console.WriteLine($"Stack trace: {ex.StackTrace}");
+        }
+        Console.WriteLine("Game1: LoadContent completed");
     }
 
     protected override void Update(GameTime gameTime)
